@@ -8,7 +8,6 @@ namespace ProductReviewManagement
 {
     public class Management
     {
-        DataTable dataTable = new DataTable();
         public void Display(List<ProductReview> productList)
         {
             foreach (ProductReview pro in productList)
@@ -40,60 +39,6 @@ namespace ProductReviewManagement
             foreach (var data in records)
             {
                 Console.WriteLine("ProductID : " + data.ProductID + "\t" + " Review : " + data.Review);
-            }
-        }
-        public void SkipTopFiveRecords(List<ProductReview> productList)
-        {
-            var records = (from Product in productList select Product).Skip(5).ToList();
-            Display(records);
-        }
-        public void ProductReviewsDataTable(List<ProductReview> productList)
-        {
-            dataTable.Columns.Add("ProductId").DataType = typeof(Int32);
-            dataTable.Columns.Add("UserId").DataType = typeof(Int32);
-            dataTable.Columns.Add("Rating").DataType = typeof(Int32);
-            dataTable.Columns.Add("Review");
-            dataTable.Columns.Add("IsLike").DataType = typeof(bool);
-            foreach (var data in productList)
-            {
-                dataTable.Rows.Add(data.ProductID, data.UserID, data.Rating, data.Review, data.IsLike);
-            }
-            var productTable = from Product in dataTable.AsEnumerable() select Product;
-            foreach (DataRow Product in productTable)
-            {
-                Console.WriteLine("ProductId : " + Product.Field<int>("ProductId") + "\t" + "UserId : " + Product.Field<int>("UserId") + "\t" + "Rating : " + Product.Field<int>("Rating") + "\t" + "Review : " + Product.Field<string>("Review") + "\t" + "IsLike : " + Product.Field<bool>("IsLike"));
-            }
-        }
-        public void RetrieveRecordsFromDataTableWhoseIsLikeIsTrue()
-        {
-            var productTable = from Product in this.dataTable.AsEnumerable() where Product.Field<bool>("IsLike").Equals(true) select Product;
-            foreach (DataRow Product in productTable)
-            {
-                Console.WriteLine("ProductId : " + Product.Field<int>("ProductId") + "\t" + "UserId : " + Product.Field<int>("UserId") + "\t" + "Rating : " + Product.Field<int>("Rating") + "\t" + "Review : " + Product.Field<string>("Review") + "\t" + "IsLike : " + Product.Field<bool>("IsLike"));
-            }
-        }
-        public void AverageRatingPerProductId(List<ProductReview> productList)
-        {
-            var records = productList.GroupBy(x => x.ProductID).Select(x => new { ProductID = x.Key, AverageRating = x.Average(x => x.Rating) });
-            foreach (var data in records)
-            {
-                Console.WriteLine("The Average Rating for ProductId {0} is {1}", data.ProductID, data.AverageRating);
-            }
-        }
-        public void RetrieveRecordsOfReviewMessage(List<ProductReview> productList, string reviewMessage)
-        {
-            var records = from Product in productList where Product.Review.Contains(reviewMessage) select Product;
-            foreach (var pro in records)
-            {
-                Console.WriteLine("ProductId : {0} \t UserId : {1} \t Rating : {2} \t Review : {3} \t IsLike : {4}", pro.ProductID, pro.UserID, pro.Rating, pro.Review, pro.IsLike);
-            }
-        }
-        public void RetrieveRecordsUsingUserId()
-        {
-            var productTable = from Product in this.dataTable.AsEnumerable() where Product.Field<int>("UserId") == 10 select Product;
-            foreach (DataRow Product in productTable)
-            {
-                Console.WriteLine("ProductId : " + Product.Field<int>("ProductId") + "\t" + "UserId : " + Product.Field<int>("UserId") + "\t" + "Rating : " + Product.Field<int>("Rating") + "\t" + "Review : " + Product.Field<string>("Review") + "\t" + "IsLike : " + Product.Field<bool>("IsLike"));
             }
         }
     }
